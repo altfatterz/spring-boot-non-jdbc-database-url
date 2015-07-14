@@ -57,10 +57,6 @@ class HerokuDatabaseConfig extends DatabaseConfig {
         dataSource.setPassword(dbUri.getUserInfo().split(":")[1]);
         dataSource.setUrl("jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
 
-        System.out.println("username:" + dataSource.getUsername());
-        System.out.println("password:" + dataSource.getPassword());
-        System.out.println("url:" + dataSource.getUrl());
-
         configureDataSource(dataSource);
 
         return dataSource;
