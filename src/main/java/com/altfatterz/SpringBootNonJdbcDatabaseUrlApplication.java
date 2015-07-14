@@ -24,7 +24,6 @@ public class SpringBootNonJdbcDatabaseUrlApplication {
 
         Properties props = new Properties();
 
-        props.setProperty("driver-class-name", pooledDataSource.getDriverClassName());
         props.setProperty("name", pooledDataSource.getName());
         props.setProperty("pool-name", pooledDataSource.getPoolName());
         props.setProperty("url", pooledDataSource.getUrl());
