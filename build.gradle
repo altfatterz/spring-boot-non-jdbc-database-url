@@ -41,3 +41,7 @@ dependencies {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
+
+// used on heroku without running tests
+task stage(dependsOn: assemble) {
+}
