@@ -17,6 +17,7 @@ public abstract class DatabaseConfig {
         dataSource.setMinIdle(8);
         dataSource.setTestOnBorrow(false);
         dataSource.setTestOnReturn(false);
+        dataSource.setValidationQuery("SELECT 1");
     }
 }
 
@@ -32,7 +33,6 @@ class DevDatabaseConfig extends DatabaseConfig {
         dataSource.setUrl("jdbc:h2:mem:sagan;MODE=PostgreSQL");
         dataSource.setUsername("sa");
         dataSource.setPassword("");
-        dataSource.setValidationQuery("SELECT 1");
 
         configureDataSource(dataSource);
 
