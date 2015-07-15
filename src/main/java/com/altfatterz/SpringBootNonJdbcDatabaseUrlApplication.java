@@ -25,9 +25,6 @@ public class SpringBootNonJdbcDatabaseUrlApplication {
     JedisConnectionFactory redisConnectionFactory;
 
     @Autowired
-    MongoDbFactory mongoDbFactory;
-
-    @Autowired
     Mongo mongo;
 
     @RequestMapping("/")
