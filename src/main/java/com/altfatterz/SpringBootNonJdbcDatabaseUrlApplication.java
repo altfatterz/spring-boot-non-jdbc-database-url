@@ -1,15 +1,18 @@
 package com.altfatterz;
 
+import com.mongodb.Mongo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootApplication
 @RestController
@@ -18,24 +21,47 @@ public class SpringBootNonJdbcDatabaseUrlApplication {
     @Autowired
     DataSource dataSource;
 
+    @Autowired
+    JedisConnectionFactory redisConnectionFactory;
+
+    @Autowired
+    MongoDbFactory mongoDbFactory;
+
+    @Autowired
+    Mongo mongo;
+
     @RequestMapping("/")
-    public Properties index() throws SQLException {
+    public Map<String, Map<String, String>> index() throws SQLException {
         org.apache.tomcat.jdbc.pool.DataSource pooledDataSource = (org.apache.tomcat.jdbc.pool.DataSource) dataSource;
 
-        Properties props = new Properties();
+        Map<String, Map<String, String>> result = new HashMap<>();
 
-        props.setProperty("name", pooledDataSource.getName());
-        props.setProperty("pool-name", pooledDataSource.getPoolName());
-        props.setProperty("url", pooledDataSource.getUrl());
-        props.setProperty("username", pooledDataSource.getUsername());
-        props.setProperty("validation-query", pooledDataSource.getValidationQuery());
+        Map<String, String> datasource = new HashMap<>();
+        datasource.put("name", pooledDataSource.getName());
+        datasource.put("pool-name", pooledDataSource.getPoolName());
+        datasource.put("url", pooledDataSource.getUrl());
+        datasource.put("username", pooledDataSource.getUsername());
+        datasource.put("validation-query", pooledDataSource.getValidationQuery());
+        datasource.put("initial-size", pooledDataSource.getInitialSize() + "");
+        datasource.put("max-active", pooledDataSource.getMaxActive() + "");
+        datasource.put("min-idle", pooledDataSource.getMinIdle() + "");
+        datasource.put("max-idle", pooledDataSource.getMaxIdle() + "");
 
-        props.setProperty("initial-size", pooledDataSource.getInitialSize() + "");
-        props.setProperty("max-active", pooledDataSource.getMaxActive() + "");
-        props.setProperty("min-idle", pooledDataSource.getMinIdle() + "");
-        props.setProperty("max-idle", pooledDataSource.getMaxIdle() + "");
+        result.put("datasource", datasource);
 
-        return props;
+        Map<String, String> redis = new HashMap<>();
+        redis.put("hostname", redisConnectionFactory.getHostName());
+        redis.put("port", redisConnectionFactory.getPort() + "");
+
+        result.put("redis", redis);
+
+        Map<String, String> mongoConnection = new HashMap<>();
+        mongoConnection.put("host", mongo.getAddress().getHost());
+        mongoConnection.put("port", mongo.getAddress().getPort() + "");
+
+        result.put("mongo", mongoConnection);
+
+        return result;
     }
 
     public static void main(String[] args) {
