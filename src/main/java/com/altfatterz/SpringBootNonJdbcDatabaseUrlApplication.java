@@ -4,13 +4,13 @@ import com.mongodb.Mongo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +34,7 @@ public class SpringBootNonJdbcDatabaseUrlApplication {
         Map<String, Map<String, String>> result = new HashMap<>();
 
         Map<String, String> datasource = new HashMap<>();
+
         datasource.put("name", pooledDataSource.getName());
         datasource.put("pool-name", pooledDataSource.getPoolName());
         datasource.put("url", pooledDataSource.getUrl());
@@ -58,6 +59,7 @@ public class SpringBootNonJdbcDatabaseUrlApplication {
 
         result.put("mongo", mongoConnection);
 
+        result.put("test", Collections.singletonMap("foo", "bar"));
         return result;
     }
 
